@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HumanUpdate</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header Section with Greeting -->
+    <header class="bg-blue-50 py-6 mb-4 shadow-sm">
+        <div class="container mx-auto flex flex-col items-center justify-center">
+            <a href="{% url 'dashboard' %}" class="text-3xl font-extrabold text-blue-700 mb-2 tracking-tight">HumanUpdate</a>
+            {% if user.is_authenticated %}
+                <p class="text-lg text-gray-700 text-center">Hello, <span class="font-semibold">{{ user.username }}</span> – Ready for your next update?</p>
+            {% else %}
+                <p class="text-lg text-gray-700 text-center">Welcome! Start your journey of conscious growth.</p>
+            {% endif %}
+        </div>
+    </header>
+    <!-- Navigation Bar -->
+    <nav class="bg-white shadow mb-8">
+        <div class="container mx-auto px-4 py-4 flex justify-center items-center space-x-6">
+            {% if user.is_authenticated %}
+                <div class="flex items-center space-x-4 mr-4">
+                    <div class="w-9 h-9 rounded-full bg-blue-200 flex items-center justify-center text-blue-800 font-bold text-lg shadow">
+                        {{ user.username|slice:":2"|upper }}
+                    </div>
+                </div>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="text-gray-700 hover:text-blue-700 font-medium">Dashboard</a>
+                <a href="{% url 'create_update' %}" class="text-gray-700 hover:text-blue-700 font-medium">Add Update</a>
+                <a href="{% url 'profile' %}" class="text-gray-700 hover:text-blue-700 font-medium">Profile</a>
+                <a href="{% url 'timeline' %}" class="text-gray-700 hover:text-blue-700 font-medium">Timeline</a>
+                <a href="{% url 'stats' %}" class="text-gray-700 hover:text-blue-700 font-medium">Stats</a>
+                <a href="{% url 'logout' %}" class="text-gray-700 hover:text-blue-700 font-medium">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="text-gray-700 hover:text-blue-700 font-medium">Login</a>
+                <a href="{% url 'register' %}" class="text-gray-700 hover:text-blue-700 font-medium">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+    <div id="toast-container" class="fixed top-6 right-6 z-50 space-y-2"></div>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <script>
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `px-4 py-3 rounded shadow text-white font-semibold flex items-center space-x-2 transition-all duration-300 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
+        toast.innerHTML = `<span>${message}</span>`;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.classList.add('opacity-0');
+            setTimeout(() => toast.remove(), 500);
+        }, 2500);
+    }
+    {% if messages %}
+        window.addEventListener('DOMContentLoaded', function() {
+            {% for message in messages %}
+                showToast("{{ message|escapejs }}", "{{ message.tags|default:'success' }}");
+            {% endfor %}
+        });
+    {% endif %}
+    </script>
+</body>
+</html> 

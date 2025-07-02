@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mx-auto max-w-2xl py-10">
+    <h1 class="text-3xl font-extrabold text-center text-blue-700 mb-10 tracking-tight">Your Growth Analytics</h1>
+    <div class="bg-white rounded-xl shadow-lg p-8 space-y-8">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+            <div>
+                <div class="text-lg font-semibold text-gray-700">Total Updates</div>
+                <div class="text-3xl font-bold text-blue-600">{{ total_updates }}</div>
+            </div>
+            <div class="mt-6 md:mt-0">
+                <div class="text-lg font-semibold text-gray-700">Average Time Between Updates</div>
+                <div class="text-xl text-blue-500">{% if avg_days %}{{ avg_days|floatformat:1 }} days{% else %}N/A{% endif %}</div>
+            </div>
+        </div>
+        <div>
+            <div class="text-lg font-semibold text-gray-700 mb-2">Updates Per Month (Last 6 Months)</div>
+            <div class="flex flex-col space-y-2">
+                {% for month, count in month_counts %}
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-600">{{ month }}</span>
+                    <span class="text-blue-700 font-bold">{{ count }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div>
+            <div class="text-lg font-semibold text-gray-700 mb-2">Most Used Words in Summaries</div>
+            {% if common_words %}
+                <div class="flex flex-wrap gap-2">
+                    {% for word in common_words %}
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">{{ word }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-gray-400">Not enough data yet.</div>
+            {% endif %}
+        </div>
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center">
+            <div>
+                <div class="text-lg font-semibold text-gray-700">First Update</div>
+                <div class="text-blue-700">{% if first_update %}{{ first_update.created_at|date:'M d, Y' }}{% else %}N/A{% endif %}</div>
+            </div>
+            <div class="mt-6 md:mt-0">
+                <div class="text-lg font-semibold text-gray-700">Latest Update</div>
+                <div class="text-blue-700">{% if latest_update %}{{ latest_update.created_at|date:'M d, Y' }}{% else %}N/A{% endif %}</div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-10 text-center">
+        <a href="{% url 'dashboard' %}" class="inline-block bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700 transition">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %} 

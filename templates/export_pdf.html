@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Human Updates PDF Export</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .update { border-bottom: 1px solid #ccc; margin-bottom: 20px; padding-bottom: 10px; }
+        .version { font-size: 18px; font-weight: bold; color: #2563eb; }
+        .date { font-size: 12px; color: #888; }
+        .summary { margin: 10px 0; }
+        .highlights { color: #1d4ed8; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <h1>Human Updates for {{ user.username }}</h1>
+    {% for update in updates %}
+        <div class="update">
+            <div class="version">{{ update.version }}</div>
+            <div class="date">{{ update.created_at|date:'M d, Y H:i' }}</div>
+            <div class="summary"><strong>Summary:</strong> {{ update.summary|linebreaksbr }}</div>
+            {% if update.highlights %}
+                <div class="highlights"><strong>Highlights:</strong> {{ update.highlights|linebreaksbr }}</div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</body>
+</html> 
